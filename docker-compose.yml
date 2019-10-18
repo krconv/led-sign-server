@@ -1,0 +1,10 @@
+version: '2'
+services:
+  led-sign-server:
+    build:
+      context: .
+    restart: "always"
+    ports:
+      - "80:8080"
+    environment:
+      - "SECRET_TOKEN=this-is-a-secret"
