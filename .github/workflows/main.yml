@@ -1,27 +1,24 @@
-name: CI
+name: CD
 
-on: [push]
+on:
+  push:
+    branches:
+    - master
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
 
     steps:
-    - uses: maddox/actions/ssh@master
     - name: Deploy
-      run: echo Hello, world!
-    - name: Run a multi-line script
-      run: |
-        echo Add other actions to build,
-        echo test, and deploy your project.
-
-action "Run deploy script" {
-  uses = "maddox/actions/ssh@master"
-  args = "/opt/deploy/run"
-  secrets = [
-    "PRIVATE_KEY",
-    "HOST",
-    "USER"
-  ]
-}
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.HOST }}
+        username: ${{ secrets.USERNAME }}
+        key: ${{ secrets.KEY }}
+        port: ${{ secrets.PORT }}
+        script_stop: true
+        script: |
+          cd ${{ secrets.DIRECTORY }}
+          git pull
+          docker-compose up --build --detach
