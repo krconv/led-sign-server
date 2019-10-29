@@ -32,6 +32,7 @@ function serializeColor(color: IColor | null): string {
   return serialized;
 }
 
+
 routes.get("/render", (req, res) => {
   const sendFrame = (frame: IFrame) => {
     res.write(serializeFrame(frame) + "\n");
