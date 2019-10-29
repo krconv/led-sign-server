@@ -1,0 +1,27 @@
+name: CI
+
+on: [push]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: maddox/actions/ssh@master
+    - name: Deploy
+      run: echo Hello, world!
+    - name: Run a multi-line script
+      run: |
+        echo Add other actions to build,
+        echo test, and deploy your project.
+
+action "Run deploy script" {
+  uses = "maddox/actions/ssh@master"
+  args = "/opt/deploy/run"
+  secrets = [
+    "PRIVATE_KEY",
+    "HOST",
+    "USER"
+  ]
+}
