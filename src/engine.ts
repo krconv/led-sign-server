@@ -1,7 +1,7 @@
 import { IRegistrar, IFrame, Plugin, getPlugins } from "./plugins";
 import { PluginType } from "./plugins/base";
 
-const enabledPlugins = ["rainbow", "test"];
+const enabledPlugins = ["clock"];
 
 export default class Engine implements IRegistrar {
   plugins: Plugin[];

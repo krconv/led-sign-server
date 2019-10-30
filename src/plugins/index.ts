@@ -1,10 +1,10 @@
 import { Plugin } from "./base";
-import RainbowPlugin from "./rainbow";
+import ClockPlugin from "./clock";
 import TestPlugin from "./test";
 
 const PLUGINS: Record<string, Plugin> = {
   test: new TestPlugin(),
-  rainbow: new RainbowPlugin(),
+  clock: new ClockPlugin(),
 };
 
 export function getPlugins(names: string[]): Plugin[] {
