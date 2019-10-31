@@ -2,7 +2,7 @@ import { IColor, IFrame, Plugin,  HEIGHT, WIDTH, PluginType } from "./base";
 
 const DURATION = 15000;
 const FOREGROUND = { r: 0xFF, g: 0xA5, b: 0x00 };
-const BACKGROUND = { r: 0x00, g: 0xA4, b: 0xBD };
+const BACKGROUND = { r: 0x00, g: 0x80, b: 0xBD };
 
 export default class ClockPlugin extends Plugin {
   constructor() {
