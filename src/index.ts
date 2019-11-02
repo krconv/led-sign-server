@@ -2,6 +2,7 @@ import bodyParser from "body-parser";
 import express from "express";
 import compression from "compression";
 import helmet from "helmet";
+import cors from "cors";
 
 import * as auth from './auth';
 import routes from "./routes";
@@ -12,6 +13,7 @@ const SECRET_TOKEN = process.env.SECRET_TOKEN || "secret";
 
 const app = express();
 
+app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 

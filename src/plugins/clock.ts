@@ -45,7 +45,6 @@ export default class ClockPlugin extends Plugin {
   }
 
   renderNumber(frame: IFrame, col: number, num: number) {
-    console.log(num)
     var left = num;
     for (var x = col; x < WIDTH && left; x++) {
       for (var y = 0; y < HEIGHT && left; y++) {
