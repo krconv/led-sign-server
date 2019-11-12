@@ -14,7 +14,9 @@ function serializeFrame(frame: IFrame): string {
 
   serialized += "|";
 
-  const serializedPixels = frame.rows.flatMap(row => row.pixels.map(serializeColor));
+  const serializedPixels = frame.rows.flatMap(row =>
+    row.pixels.map(serializeColor)
+  );
   serialized += serializedPixels.join(",");
 
   return serialized;
@@ -24,14 +26,15 @@ function serializeColor(color: IColor | null): string {
   var serialized = "";
   if (color) {
     [color.r, color.g, color.b].forEach(component => {
-      serialized += Math.trunc(component).toString(16).padStart(2, "0");
+      serialized += Math.trunc(component)
+        .toString(16)
+        .padStart(2, "0");
     });
   } else {
     serialized = "000000";
   }
   return serialized;
 }
-
 
 routes.get("/render", (req, res) => {
   const sendFrame = (frame: IFrame) => {

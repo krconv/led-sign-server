@@ -1,36 +1,22 @@
-import { IColor, IFrame, Plugin,  HEIGHT, WIDTH, PluginType } from "./base";
+import { IFrame, initFrame, Plugin, HEIGHT, WIDTH, PluginType } from "./base";
 
 const DURATION = 15000;
-const FOREGROUND = { r: 0xFF, g: 0xA5, b: 0x00 };
-const BACKGROUND = { r: 0x00, g: 0x80, b: 0xBD };
+const FOREGROUND = { r: 0xff, g: 0xa5, b: 0x00 };
+const BACKGROUND = { r: 0x00, g: 0x80, b: 0xbd };
 
 export default class ClockPlugin extends Plugin {
   constructor() {
-    super({ type: PluginType.BACKGROUND, duration: DURATION});
+    super({ type: PluginType.BACKGROUND, duration: DURATION });
   }
 
   render(): IFrame {
-    const frame = this.initFrame();
+    const frame = initFrame(BACKGROUND);
     const now = new Date();
 
     this.renderHour(frame, now);
-    this.renderMinute(frame, now)
-
+    this.renderMinute(frame, now);
 
     return frame;
-  }
-
-  initFrame(): IFrame {
-    const rows = [];
-    for (var y = 0; y < HEIGHT; y++) {
-      const pixels = [];
-      for (var x = 0; x < WIDTH; x++) {
-        pixels.push(BACKGROUND);
-      }
-      rows.push({ pixels } );
-    }
-
-    return { rows }
   }
 
   renderHour(frame: IFrame, now: Date) {
@@ -40,7 +26,7 @@ export default class ClockPlugin extends Plugin {
 
   renderMinute(frame: IFrame, now: Date) {
     var minute = now.getMinutes();
-    this.renderNumber(frame, 4, Math.trunc(minute / 10));
+    this.renderNumber(frame, 5, Math.trunc(minute / 10));
     this.renderNumber(frame, 7, minute % 10);
   }
 

@@ -4,7 +4,7 @@ import compression from "compression";
 import helmet from "helmet";
 import cors from "cors";
 
-import * as auth from './auth';
+import * as auth from "./auth";
 import routes from "./routes";
 
 const PORT = process.env.PORT || 8080;

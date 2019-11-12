@@ -9,10 +9,29 @@ interface IFrameRow {
   pixels: (IColor | null)[];
 }
 
+export const initFrame = (color: IColor | null): IFrame => {
+  const rows = [];
+  for (var y = 0; y < HEIGHT; y++) {
+    const pixels = [];
+    for (var x = 0; x < WIDTH; x++) {
+      pixels.push(color);
+    }
+    rows.push({ pixels });
+  }
+
+  return { rows };
+};
+
 export interface IColor {
   r: number;
   g: number;
   b: number;
+}
+
+export interface IPixel {
+  color: IColor;
+  x: number;
+  y: number;
 }
 
 export abstract class Plugin {
@@ -32,12 +51,15 @@ export abstract class Plugin {
 
   onLoad(): void {}
 
-  abstract render(percent: number): IFrame;
+  render(percent: number): IFrame | IPixel | null {
+    return null;
+  }
 }
 
 export enum PluginType {
   BACKGROUND,
-  NOTIFICATION
+  NOTIFICATION,
+  DATA_PIXEL
 }
 
 export interface IPluginMetadata {

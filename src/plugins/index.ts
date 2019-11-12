@@ -1,10 +1,12 @@
 import { Plugin } from "./base";
 import ClockPlugin from "./clock";
 import TestPlugin from "./test";
+import CalendarPlugin from "./calendar";
 
 const PLUGINS: Record<string, Plugin> = {
   test: new TestPlugin(),
   clock: new ClockPlugin(),
+  calendar: new CalendarPlugin()
 };
 
 export function getPlugins(names: string[]): Plugin[] {
@@ -15,4 +17,13 @@ export function getPlugins(names: string[]): Plugin[] {
   });
 }
 
-export { IColor, IRegistrar, IFrame, Plugin, WIDTH, HEIGHT } from "./base";
+export {
+  IColor,
+  IRegistrar,
+  IFrame,
+  initFrame,
+  IPixel,
+  Plugin,
+  WIDTH,
+  HEIGHT
+} from "./base";

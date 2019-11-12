@@ -1,16 +1,19 @@
 import { IRegistrar, IFrame, Plugin, getPlugins } from "./plugins";
-import { PluginType } from "./plugins/base";
+import { PluginType, initFrame, IPixel } from "./plugins/base";
 
-const enabledPlugins = ["clock"];
+const enabledPlugins = ["clock", "calendar"];
 
 export default class Engine implements IRegistrar {
   plugins: Plugin[];
   backgroundScheduler: BackgroundScheduler;
+  dataPixelScheduler: DataPixelScheduler;
   notificationScheduler: NotificationScheduler;
+
   constructor() {
     this.plugins = getPlugins(enabledPlugins);
     this.plugins.forEach(plugin => plugin.onRegister(this));
     this.backgroundScheduler = new BackgroundScheduler(this.plugins);
+    this.dataPixelScheduler = new DataPixelScheduler(this.plugins);
     this.notificationScheduler = new NotificationScheduler();
   }
 
@@ -18,31 +21,42 @@ export default class Engine implements IRegistrar {
     if (plugin.getType() === PluginType.NOTIFICATION) {
       this.notificationScheduler.request(plugin);
     } else {
-      throw new Error("Cannot request to play background plugins.")
+      throw new Error(`Cannot request to play ${plugin.getType()} plugins.`);
     }
   }
 
   play(callback: (frame: IFrame) => void) {
     const render = () => {
-      const [backgroundPlugin, backgroundPercent] = this.backgroundScheduler.schedule();
-      const frame = backgroundPlugin.render(backgroundPercent);
+      const painter = new FramePainter();
 
-      const [notificationPlugin, notificationPercent] = this.notificationScheduler.schedule();
+      const [
+        backgroundPlugin,
+        backgroundPercent
+      ] = this.backgroundScheduler.schedule();
+      painter.paint(backgroundPlugin.render(backgroundPercent));
+
+      const dataPixelSchedules = this.dataPixelScheduler.schedule();
+      dataPixelSchedules.forEach(([plugin, percent]) =>
+        painter.paint(plugin.render(percent))
+      );
+
+      const [
+        notificationPlugin,
+        notificationPercent
+      ] = this.notificationScheduler.schedule();
       if (notificationPlugin && notificationPercent) {
-        const notificationFrame = notificationPlugin.render(notificationPercent);
-        notificationFrame.rows.forEach((row, y) => row.pixels.forEach((color, x) => {
-          if (color) {
-            frame.rows[y].pixels[x] = color;
-          }
-        }));
+        painter.paint(notificationPlugin.render(notificationPercent));
       }
 
-      callback(frame);
-
+      callback(painter.getFrame());
       setTimeout(render, 100);
     };
 
     setImmediate(render);
+  }
+
+  getDataPixelPlugins(): Plugin[] {
+    return this.plugins.filter(p => p.getType() == PluginType.DATA_PIXEL);
   }
 }
 
@@ -76,7 +90,9 @@ class NotificationScheduler {
   }
 
   private getPercent(): number {
-    return (Date.now() - this.lastChange) / this.getActivePlugin().metadata.duration;
+    return (
+      (Date.now() - this.lastChange) / this.getActivePlugin().metadata.duration
+    );
   }
 
   private getActivePlugin(): Plugin {
@@ -112,7 +128,9 @@ class BackgroundScheduler {
   }
 
   private getPercent(): number {
-    return (Date.now() - this.lastChange) / this.getActivePlugin().metadata.duration;
+    return (
+      (Date.now() - this.lastChange) / this.getActivePlugin().metadata.duration
+    );
   }
 
   private getActivePlugin(): Plugin {
@@ -127,5 +145,66 @@ class BackgroundScheduler {
     } else {
       throw new Error("There are no background plugins to schedule!");
     }
+  }
+}
+
+class DataPixelScheduler {
+  plugins: Plugin[];
+  start: number;
+
+  constructor(plugins: Plugin[]) {
+    this.plugins = plugins.filter(
+      plugin => plugin.getType() === PluginType.DATA_PIXEL
+    );
+    this.start = Date.now();
+  }
+
+  schedule(): [Plugin, number][] {
+    const now = Date.now();
+    return this.plugins.map(plugin => [
+      plugin,
+      this.getPercent(now, plugin.metadata.duration)
+    ]);
+  }
+
+  private getPercent(now: number, duration: number): number {
+    return ((now - this.start) / duration) % 1;
+  }
+}
+
+const BLACK = { r: 0, g: 0, b: 0 };
+class FramePainter {
+  base: IFrame;
+
+  constructor() {
+    this.base = initFrame(BLACK);
+  }
+
+  paint(data: IFrame | IPixel | null): void {
+    if (!data) {
+      return;
+    }
+
+    if ("rows" in data) {
+      this.paintFrame(data);
+    } else {
+      this.paintPixel(data);
+    }
+  }
+
+  paintFrame(frame: IFrame): void {
+    frame.rows.forEach((row, y) =>
+      row.pixels.forEach(
+        (color, x) => color && this.paintPixel({ color, x, y })
+      )
+    );
+  }
+
+  paintPixel({ x, y, color }: IPixel): void {
+    this.base.rows[y].pixels[x] = color;
+  }
+
+  getFrame() {
+    return this.base;
   }
 }

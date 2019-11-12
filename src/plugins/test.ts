@@ -12,7 +12,7 @@ export default class TestPlugin extends Plugin {
       if (this.registrar) {
         this.registrar.request(this);
       }
-    }, 5000)
+    }, 5000);
   }
 
   render(percent: number): IFrame {
