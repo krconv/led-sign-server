@@ -3,9 +3,12 @@ import express from "express";
 import compression from "compression";
 import helmet from "helmet";
 import cors from "cors";
+import dotenv from "dotenv";
 
 import * as auth from "./auth";
 import routes from "./routes";
+
+dotenv.config();
 
 const PORT = process.env.PORT || 8080;
 
