@@ -1,7 +1,7 @@
 import { IFrame, initFrame, Plugin, HEIGHT, WIDTH, PluginType } from "./base";
 
 const DURATION = 15000;
-const BACKGROUND = { r: 0xff, g: 0xff, b: 0xff };
+const BACKGROUND = { r: 0xaa, g: 0xff, b: 0xff };
 const FOREGROUND = { r: 0x00, g: 0x80, b: 0xbd };
 
 export default class ClockPlugin extends Plugin {
