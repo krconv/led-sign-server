@@ -1,4 +1,4 @@
-import { IColor, Plugin, IPixel, PluginType } from "./base";
+import { IColor, Plugin, IPixel, PluginType, RED, ORANGE } from "./base";
 import { OAuth2Client } from "google-auth-library";
 import { calendar_v3 } from "googleapis";
 
@@ -20,13 +20,13 @@ export default class CalendarPlugin extends Plugin {
     this.authClient = new OAuth2Client({
       clientId: process.env.GOOGLE_API_CLIENT_ID,
       clientSecret: process.env.GOOGLE_API_CLIENT_SECRET,
-      redirectUri: process.env.GOOGLE_API_REDIRECT_URI,
+      redirectUri: process.env.GOOGLE_API_REDIRECT_URI
     });
     this.authClient.setCredentials({
       refresh_token: process.env.GOOGLE_API_REFRESH_TOKEN
     });
     this.calendarClient = new calendar_v3.Calendar({
-      auth: this.authClient,
+      auth: this.authClient
     });
 
     this.updateNextEvent();
@@ -42,12 +42,11 @@ export default class CalendarPlugin extends Plugin {
       }
     }
 
-    return color && { color, x: 3, y: 4 };
+    return color && { color, x: 3, y: 3 };
   }
 
   updateNextEvent(): Promise<calendar_v3.Schema$Event> {
-    return this.getNextNonAllDayEvent()
-      .then(event => this.nextEvent = event)
+    return this.getNextNonAllDayEvent().then(event => (this.nextEvent = event));
   }
 
   getNextNonAllDayEvent(): Promise<calendar_v3.Schema$Event> {
@@ -57,36 +56,40 @@ export default class CalendarPlugin extends Plugin {
         return;
       }
 
-      this.calendarClient.events.list({
-        calendarId: 'primary',
-        timeMin: (new Date()).toISOString(),
-        maxResults: 10,
-        singleEvents: true,
-        orderBy: 'startTime',
-      }, (err, res) => {
-        if (err || !res) {
-          reject("Calendar returned an error: " + err);
-          return;
+      this.calendarClient.events.list(
+        {
+          calendarId: "primary",
+          timeMin: new Date().toISOString(),
+          maxResults: 10,
+          singleEvents: true,
+          orderBy: "startTime"
+        },
+        (err, res) => {
+          if (err || !res) {
+            reject("Calendar returned an error: " + err);
+            return;
+          }
+
+          const eventsWithStartTime = (res.data.items || []).filter(
+            event => (event.start || {}).dateTime
+          );
+
+          if (!eventsWithStartTime || eventsWithStartTime.length === 0) {
+            reject("Calendar didn't return a next event!");
+            return;
+          }
+
+          resolve(eventsWithStartTime[0]);
         }
-
-        const eventsWithStartTime = (res.data.items || [])
-          .filter(event => (event.start || {}).dateTime);
-
-        if (!eventsWithStartTime || eventsWithStartTime.length === 0) {
-          reject("Calendar didn't return a next event!");
-          return;
-        }
-
-        resolve(eventsWithStartTime[0]);
-      })
-    })
+      );
+    });
   }
 
   calculateColor(): IColor | null {
     if (this.nextEventIsWithinOneMinute()) {
-      return { r: 0xf2, g: 0x54, b: 0x5b };
+      return RED;
     } else if (this.nextEventIsWithinFiveMinutes()) {
-      return { r: 0xff, g: 0x8f, b: 0x59 };
+      return ORANGE;
     } else {
       return null;
     }
@@ -111,13 +114,15 @@ export default class CalendarPlugin extends Plugin {
   nextEventIsWithinMinutes(minutes: number): boolean {
     const startTime = this.getNextEventStartTime();
     if (startTime) {
-      return startTime <= Date.now() + (minutes * 60 * 1000);
+      return startTime <= Date.now() + minutes * 60 * 1000;
     } else {
       return false;
     }
   }
 
   getNextEventStartTime(): number | null {
-    return Date.parse(((this.nextEvent || {}).start || {}).dateTime || "") || null;
+    return (
+      Date.parse(((this.nextEvent || {}).start || {}).dateTime || "") || null
+    );
   }
 }

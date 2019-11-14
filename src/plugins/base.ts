@@ -70,3 +70,12 @@ export interface IPluginMetadata {
 export interface IRegistrar {
   request(plugin: Plugin): void;
 }
+
+export const YELLOW: IColor = { r: 0xf5, g: 0xc2, b: 0x6b };
+export const RED: IColor = { r: 0xf2, g: 0x54, b: 0x5b };
+export const ORANGE: IColor = { r: 0xff, g: 0x8f, b: 0x59 };
+export const BLUE: IColor = { r: 0x00, g: 0xa4, b: 0xbd };
+export const LIGHT_GRAY: IColor = { r: 0xcb, g: 0xd6, b: 0xe2 };
+export const WHITE: IColor = { r: 0xff, g: 0xff, b: 0xff };
+export const BLUSH: IColor = { r: 0xbc, g: 0x48, b: 0x73 };
+export const MIDNIGHT: IColor = { r: 0x00, g: 0x3f, b: 0x5c };

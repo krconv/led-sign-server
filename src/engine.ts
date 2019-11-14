@@ -1,7 +1,7 @@
 import { IRegistrar, IFrame, Plugin, getPlugins } from "./plugins";
 import { PluginType, initFrame, IPixel } from "./plugins/base";
 
-const enabledPlugins = ["clock", "calendar"];
+const enabledPlugins = ["clock", "calendar", "weather"];
 
 export default class Engine implements IRegistrar {
   plugins: Plugin[];
@@ -150,13 +150,11 @@ class BackgroundScheduler {
 
 class DataPixelScheduler {
   plugins: Plugin[];
-  start: number;
 
   constructor(plugins: Plugin[]) {
     this.plugins = plugins.filter(
       plugin => plugin.getType() === PluginType.DATA_PIXEL
     );
-    this.start = Date.now();
   }
 
   schedule(): [Plugin, number][] {
@@ -168,7 +166,7 @@ class DataPixelScheduler {
   }
 
   private getPercent(now: number, duration: number): number {
-    return ((now - this.start) / duration) % 1;
+    return (now / duration) % 1;
   }
 }
 

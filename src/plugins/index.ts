@@ -2,11 +2,13 @@ import { Plugin } from "./base";
 import ClockPlugin from "./clock";
 import TestPlugin from "./test";
 import CalendarPlugin from "./calendar";
+import WeatherPlugin from "./weather";
 
 const PLUGINS: Record<string, Plugin> = {
   test: new TestPlugin(),
   clock: new ClockPlugin(),
-  calendar: new CalendarPlugin()
+  calendar: new CalendarPlugin(),
+  weather: new WeatherPlugin()
 };
 
 export function getPlugins(names: string[]): Plugin[] {
