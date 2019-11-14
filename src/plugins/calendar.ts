@@ -84,9 +84,9 @@ export default class CalendarPlugin extends Plugin {
 
   calculateColor(): IColor | null {
     if (this.nextEventIsWithinOneMinute()) {
-      return { r: 255, g: 0, b: 0 };
+      return { r: 0xf2, g: 0x54, b: 0x5b };
     } else if (this.nextEventIsWithinFiveMinutes()) {
-      return { r: 255, g: 255, b: 0 };
+      return { r: 0xff, g: 0x8f, b: 0x59 };
     } else {
       return null;
     }
