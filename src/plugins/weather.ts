@@ -73,7 +73,7 @@ export default class WeatherPlugin extends Plugin {
   buildApiUrl(): string {
     const cityId = process.env.WEATHER_API_CITY_ID;
     const appId = process.env.WEATHER_API_APP_ID;
-    return `https://samples.openweathermap.org/data/2.5/weather?id=${cityId}&appid=${appId}`;
+    return `https://openweathermap.org/data/2.5/weather?id=${cityId}&appid=${appId}`;
   }
 
   getConditionFromResponse(response: any): Condition | null {
