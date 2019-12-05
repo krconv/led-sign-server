@@ -6,12 +6,12 @@ import {
   WIDTH,
   PluginType,
   MIDNIGHT,
-  BLUSH
+  ORANGE
 } from "./base";
 
 const DURATION = 15000;
 const BACKGROUND = MIDNIGHT;
-const FOREGROUND = BLUSH;
+const FOREGROUND = ORANGE;
 
 export default class ClockPlugin extends Plugin {
   constructor() {
