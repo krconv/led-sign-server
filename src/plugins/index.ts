@@ -2,12 +2,14 @@ import { Plugin } from "./base";
 import ClockPlugin from "./clock";
 import TestPlugin from "./test";
 import CalendarPlugin from "./calendar";
+import KeplerPlugin from "./kepler";
 import WeatherPlugin from "./weather";
 
 const PLUGINS: Record<string, Plugin> = {
   test: new TestPlugin(),
   clock: new ClockPlugin(),
   calendar: new CalendarPlugin(),
+  kepler: new KeplerPlugin(),
   weather: new WeatherPlugin()
 };
 

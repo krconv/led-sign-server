@@ -1,7 +1,7 @@
 import { IRegistrar, IFrame, Plugin, getPlugins } from "./plugins";
 import { PluginType, initFrame, IPixel } from "./plugins/base";
 
-const enabledPlugins = ["clock", "calendar", "weather"];
+const enabledPlugins = ["clock", "calendar", "weather", "kepler"];
 
 export default class Engine implements IRegistrar {
   plugins: Plugin[];
