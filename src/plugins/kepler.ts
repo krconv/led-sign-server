@@ -1,7 +1,7 @@
 import {
   IColor,
   Plugin,
-  IFrame,
+  IPixel,
   PluginType,
   RED,
   WIDTH,
@@ -47,11 +47,12 @@ export default class KeplerPlugin extends Plugin {
       })
   }
 
-  render(percent: number): IFrame | null {
+  render(percent: number): IPixel | null {
     const color = this.determineColor(percent);
     if (!color) return null;
 
-    return this.createOutlineFrame(color);
+    // return this.createOutlineFrame(color);
+    return { color, x: 3, y: 2 }
   }
 
   determineColor(percent: number): IColor | null {
