@@ -86,7 +86,7 @@ export default class KeplerPlugin extends Plugin {
   }
 }
 
-const ALERT_PATTERN = /^\*(prod|qa)\/[a-z0-9-]+\[(high|low) priority\]\: ([a-zA-Z-]+)\* alerting .*:red-check:.*$/;
+const ALERT_PATTERN = /^\*(prod|qa)\/[a-z0-9-]+\[(high|low) priority\]\: ([a-zA-Z-]+)\* alerting .*:red-x:.*$/;
 const ALERT_GROUPS = { "environment": 1, "priority": 2, "deployable": 3}
 
 const DOT_MATCHES_NEWLINE = "s";
